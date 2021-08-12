@@ -1,122 +1,111 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MathDraw
 {
-    public partial class MainForm : Form
-    {
-        Point[] pontos = new Point[100];
-        Random rng = new Random();
-        public MainForm()
-        {
-            InitializeComponent();
-        }
+	public partial class MainForm : Form
+	{
+		// Initializes the randomizer.
+		Random rng = new Random();
+		public MainForm()
+		{
+			InitializeComponent();
+		}
+		private void MainForm_Load(object sender, EventArgs e)
+		{
+			keepdrawing(10);
 
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-            //    Drawtest();
-            for (int i = 0; i <= 100; i++)
-            {
-                DrawtestColor();
-               
-            }
-            
-        }
+		}
+		public void Drawtest_Colorful()
+		{
+			// Creating a new thread to not crash the form.
+			new Thread(() =>
+			{
+				// Defining the maximum amount of points to be generated per tick.
+				Point[] pontos = new Point[100];
 
-        public void Drawtest()
-        {
-            new Thread(() =>
-            {
-                Thread.CurrentThread.IsBackground = true;
-                Bitmap bitmap1 = new Bitmap(1000, 800, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
-                Graphics graphics1 = Graphics.FromImage(bitmap1);
-                Pen pen1 = new Pen(Color.Black, 1);
-               
-                int limit = 900;
-                for (int i = 0; i < pontos.Length - limit; i++)
-                {
-                    pontos[i].X = rng.Next(0, pictureBox1.Width);
-                    pontos[i].Y = rng.Next(0, pictureBox1.Height);
+				// Defining a new color using RNG
+				Color rainbow = Color.FromArgb(255, rng.Next(0, 255), rng.Next(0, 255), rng.Next(0, 255));
 
-                }
-                graphics1.DrawPolygon(pen1, pontos);
+				Thread.CurrentThread.IsBackground = true;
 
-                _ = pictureBox1.Invoke(new MethodInvoker(
-              delegate ()
-              {
-                  pictureBox1.Image = bitmap1;
-                  pictureBox1.Update();
-                  bitmap1.Dispose();
-                  graphics1.Dispose();
-                  Thread.Sleep(10);
-              }));
-            }).Start();
-            
-        }
-        public void DrawtestColor()
-        {
-            new Thread(() =>
-            {
-                Color rainbow = Color.FromArgb(255, rng.Next(0, 255), rng.Next(0, 255), rng.Next(0, 255));
-                Thread.CurrentThread.IsBackground = true;
-                Bitmap bitmap1 = new Bitmap(1000, 800, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
-                Graphics graphics1 = Graphics.FromImage(bitmap1);
-                Pen pen1 = new Pen(rainbow, 1);
-                pen1.Color = rainbow;
+				// Initializes the bitmap.
+				Bitmap bitmap1 = new Bitmap(this.Width, this.Height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
 
+				// Manually calling Garbage Collector since calling the dispose of the bitmap1 object are causing multiple issues when resizing the form.
+				System.GC.Collect();
+				
+				Graphics graphics1 = Graphics.FromImage(bitmap1);
+				Pen pen1 = new Pen(rainbow, 1);
+				pen1.Color = rainbow;
+				
+				// Here we randomly generate the X and Y values for half of our points, since we want the other half to have a different color.
+				for (int i = 0; i < pontos.Length / 2; i++)
+				{
+					pontos[i].X = rng.Next(0, pictureBox1.Width);
+					pontos[i].Y = rng.Next(0, pictureBox1.Height);
+					if (i % 100 == 0)
+					{
+						rainbow = Color.FromArgb(255, rng.Next(0, 255), rng.Next(0, 255), rng.Next(0, 255));
+						pen1.Color = rainbow;
+					}
+				}
 
-                int limit = 10;
-                for (int i = 0; i < pontos.Length - limit; i++)
-                {
-                    pontos[i].X = rng.Next(0, pictureBox1.Width);
-                    pontos[i].Y = rng.Next(0, pictureBox1.Height);
-                    if (i % 100 == 0)
-                    {
-                        rainbow = Color.FromArgb(255, rng.Next(0, 255), rng.Next(0, 255), rng.Next(0, 255));
-                        pen1.Color = rainbow;
-                    }
-                }
-                
-                graphics1.DrawPolygon(pen1, pontos);
+				// Then we draw the above generated points with our rainbow pencil.
+				graphics1.DrawPolygon(pen1, pontos);
 
-                _ = pictureBox1.Invoke(new MethodInvoker(
-              delegate ()
-              {
-                  pictureBox1.Image = bitmap1;
-                  pictureBox1.Update();
-                 bitmap1.Dispose();
-                 graphics1.Dispose();
-                  Thread.Sleep(100);
-              }));
-            }).Start();
+				// The same thing again...
+				for (int i = 0; i < pontos.Length / 2; i++)
+				{
+					pontos[i].X = rng.Next(0, pictureBox1.Width);
+					pontos[i].Y = rng.Next(0, pictureBox1.Height);
+					if (i % 100 == 0)
+					{
+						rainbow = Color.FromArgb(255, rng.Next(0, 255), rng.Next(0, 255), rng.Next(0, 255));
+						pen1.Color = rainbow;
+					}
+				}
 
-        }
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-            keepdrawing();
-        }
-        private void keepdrawing()
-        {
-          
-            for (int i = 0; i < 100; i++)
-            {
-                
-                DrawtestColor();
-             
-            }
-         
+				graphics1.DrawPolygon(pen1, pontos);
 
-           
-        }
+				// Now we need to Invoke the pictureBox1 from our different thread and update the image.
+				_ = pictureBox1.Invoke(new MethodInvoker(
+			  delegate ()
+			  {
+				  pictureBox1.Image = bitmap1;
+				  pictureBox1.Update();
+				  //      bitmap1.Dispose();
+				  graphics1.Dispose();
+				  Thread.Sleep(100);
+			  }));
+			}).Start();
 
-    }
-    
+		}
+
+		private void keepdrawing(int times)
+		{
+
+			for (int i = 0; i < times; i++)
+			{
+
+				if (pictureBox1 != null && pictureBox1.Image != null)
+				{
+					Image img = pictureBox1.Image;
+					pictureBox1.Image = null;
+					img.Dispose();
+				}
+
+				Drawtest_Colorful();
+
+			}
+
+		}
+		private void pictureBox1_Click(object sender, EventArgs e)
+		{
+			keepdrawing(10);
+		}
+	}
+
 }
