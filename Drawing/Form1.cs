@@ -24,7 +24,8 @@ namespace MathDraw
 			new Thread(() =>
 			{
 				// Defining the maximum amount of points to be generated per tick.
-				Point[] pontos = new Point[100];
+				// The maximum amount of points can increase along with the form width, the density looks more proportional.
+				Point[] pontos = new Point[100+this.Width/10];
 
 				// Defining a new color using RNG
 				Color rainbow = Color.FromArgb(255, rng.Next(0, 255), rng.Next(0, 255), rng.Next(0, 255));
