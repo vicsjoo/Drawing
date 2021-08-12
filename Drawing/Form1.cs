@@ -13,7 +13,7 @@ namespace MathDraw
 {
     public partial class MainForm : Form
     {
-        Point[] pontos = new Point[1200];
+        Point[] pontos = new Point[100];
         Random rng = new Random();
         public MainForm()
         {
