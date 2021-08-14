@@ -131,6 +131,13 @@ namespace MathDraw
 				case (Keys.F5):
 					refresh(null,null);
 					break;
+				case (Keys.S):
+					if (e.Control)
+					{
+						save_file(null, null);
+					}
+					break;
+
             }
         }
     }
