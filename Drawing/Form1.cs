@@ -77,8 +77,8 @@ namespace MathDraw
 			  {
 				  pictureBox1.Image = bitmap1;
 				  pictureBox1.Update();
-				  //      bitmap1.Dispose();
-				  graphics1.Dispose();
+                  //      bitmap1.Dispose();
+                  // graphics1.Dispose();
 				  Thread.Sleep(100);
 			  }));
 			}).Start();
