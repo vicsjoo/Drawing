@@ -77,9 +77,6 @@ namespace MathDraw
 			  {
 				  pictureBox1.Image = bitmap1;
 				  pictureBox1.Update();
-                  //      bitmap1.Dispose();
-                  // graphics1.Dispose();
-				  Thread.Sleep(100);
 			  }));
 			}).Start();
 
@@ -96,6 +93,7 @@ namespace MathDraw
 					Image img = pictureBox1.Image;
 					pictureBox1.Image = null;
 					img.Dispose();
+					Thread.Sleep(100);
 				}
 
 				Drawtest_Colorful();
