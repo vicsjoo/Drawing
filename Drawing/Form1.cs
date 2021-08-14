@@ -105,8 +105,24 @@ namespace MathDraw
 		}
 		private void pictureBox1_Click(object sender, EventArgs e)
 		{
-			keepdrawing(10);
+			// keepdrawing(10);
 		}
-	}
+
+        private void refresh(object sender, EventArgs e)
+        {
+			keepdrawing(1);
+        }
+
+        private void save_file(object sender, EventArgs e)
+        {
+			using (SaveFileDialog saveFileDialog = new SaveFileDialog() { Filter = @"PNG|*.png" })
+			{
+				if (saveFileDialog.ShowDialog() == DialogResult.OK)
+				{
+					pictureBox1.Image.Save(saveFileDialog.FileName);
+				}
+			}
+		}
+    }
 
 }
