@@ -123,6 +123,16 @@ namespace MathDraw
 				}
 			}
 		}
+
+        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+				case (Keys.F5):
+					refresh(null,null);
+					break;
+            }
+        }
     }
 
 }
