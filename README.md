@@ -1,2 +1,2 @@
 # Drawing
-abstract art/procedural images.
+Drawing simple shapes with the framework using random numbers.
