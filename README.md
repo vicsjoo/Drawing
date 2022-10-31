@@ -1,2 +1,2 @@
 # Drawing
-Drawing simple shapes with the framework using random numbers.
+Drawing simple shapes using the .NET Framework with random numbers.
